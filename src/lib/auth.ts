@@ -29,29 +29,41 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user }) {
-      const dbUser = (await db.get("user:${user.id}")) as User | null;
-      if (!dbUser) {
-        token.id = user!.id;
-        return token;
+    //   console.log("JWT callback - token before:", token);
+    //   console.log("JWT callback - user:", user);
+
+      if (user) {
+        const dbUser = (await db.get(`user:${user.id}`)) as User | null;
+        // console.log("JWT callback - dbUser:", dbUser);
+
+        if (!dbUser) {
+          token.id = user.id;
+        } else {
+          token.id = dbUser.id;
+          token.name = dbUser.name;
+          token.email = dbUser.email;
+          token.image = dbUser.image;
+        }
       }
-      return {
-        id: dbUser.id,
-        name: dbUser.name,
-        email: dbUser.email,
-        image: dbUser.image,
-      };
+
+      console.log("JWT callback - token after:", token);
+      return token;
     },
     async session({ session, token }) {
+      console.log("Session callback - token:", token);
+
       if (token) {
         session.user.id = token.id;
         session.user.name = token.name;
         session.user.email = token.email;
-        session.user.image = token.picture;
+        session.user.image = token.image;
       }
+
+      console.log("Session callback - session:", session);
       return session;
     },
     redirect() {
-      return "/dashboard ";
+      return "/dashboard";
     },
   },
 };
