@@ -6,6 +6,8 @@ import { notFound } from "next/navigation";
 import { ReactNode } from "react";
 import Image from "next/image";
 import SignOutButton from "@/components/SignOutButton";
+import FriendRequestsSidebarOptions from "@/components/FriendRequestsSidebarOptions";
+import { fetchRedis } from "@/helpers/redis";
 
 interface LayoutProps {
   children: ReactNode;
@@ -32,6 +34,9 @@ const Layout = async ({ children }: LayoutProps) => {
   if (!session) {
     notFound();
   }
+
+  const unseenRequestCount = (await fetchRedis('smembers', `user:${session.user.id}:incoming_friend_requests`)as User[]).length;
+  console.log("Unseen request count:", unseenRequestCount);
   return (
     <div className="w-full flex h-screen bg-white">
       <div className="flex h-full w-full max-w-xs grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
@@ -66,6 +71,10 @@ const Layout = async ({ children }: LayoutProps) => {
                   );
                 })}
               </ul>
+            </li>
+
+            <li>
+              <FriendRequestsSidebarOptions sessionId={session.user.id} initialUnseenRequestCount = {unseenRequestCount}  />
             </li>
             <li className="-mx-6 mt-auto flex items-center">
               <div className=" flex flex-1 items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900">
