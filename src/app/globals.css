@@ -25,3 +25,23 @@ body {
     text-wrap: balance;
   }
 }
+
+.scrollbar-w-2::-webkit-scrollbar {
+  width: 0.25rem;
+  height: 0.25rem;
+}
+
+.scrollbar-track-bleu-lighter::-webkit-scrollbar-track {
+  --bg-opacity: 1;
+  background-color: #f7fafc;
+  background-color: rgba(247, 250, 252, var(--bg-opacity));
+}
+
+.scollbar-thumb-bleu::--webkit-scrollbar-thumb {
+  --bg-opacity: 1;
+  background-color: #2df2f7;
+  background-color: rgba(237, 242, 247, var(--bg-opacity));
+}
+.scollbar-thumb-rounded::--webkit-scrollbar-thumb {
+  border-radius: 0.25rem;
+}

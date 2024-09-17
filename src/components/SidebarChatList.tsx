@@ -2,6 +2,7 @@
 import { chatHrefConstructor } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 import { FC, useEffect, useState } from "react";
+import Image from "next/image";
 
 interface ChatPageProps {
   friends: User[];
@@ -28,17 +29,30 @@ const SidebarChatList: FC<ChatPageProps> = ({ friends, sessionId }) => {
         ).length;
 
         return (
-          <li key={friend.id}>
+          <li
+            key={friend.id}
+            className="flex items-center gap-x-3 p-2 hover:bg-gray-50 rounded-md"
+          >
+            <Image
+              src={friend.image}
+              alt={friend.name}
+              width={30}
+              height={30}
+              className="rounded-full"
+            />
             <a
               href={`/dashboard/chat/${chatHrefConstructor(
                 sessionId,
                 friend.id
               )}`}
-            className="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex item-center gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold "> {friend.name}
-            {unseenMessagesCount > 0 ? (
-                <div className="bg-indigo-600 font-medium text-xs text-white w-4 h-4 rounded-full flex justify-center item-center">
-                    {unseenMessagesCount}
-                </div>) : null}
+              className="flex items-center gap-x-3 text-gray-700 hover:text-indigo-600 text-sm leading-6 font-semibold "
+            >
+              {friend.name}
+              {unseenMessagesCount > 0 && (
+                <div className="bg-indigo-600 font-medium text-xs text-white w-4 h-4 rounded-full flex items-center justify-center">
+                  {unseenMessagesCount}
+                </div>
+              )}
             </a>
           </li>
         );
